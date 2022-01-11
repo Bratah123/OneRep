@@ -39,7 +39,7 @@ class Commands(commands.Cog, name="commands"):
             if weight_percentages[index] < 45.0:  # This way we dont show a weight where its lighter than the bar
                 index += 1
                 continue
-            message += f"\n{i}%: {weight_percentages[index]}"
+            message += f"\n{i}%: {weight_percentages[index]} -> {weight_to_plates(weight_percentages[index])}"
             index += 1
         message += "```"
 

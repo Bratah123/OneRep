@@ -65,7 +65,7 @@ def weight_to_plates(weight) -> str:
     for i, plate in enumerate(plates_used):
         plate_count = int(plate_cache.count(plate) / 2)
         plate_str = plural(WEIGHT_PLATES_TO_STR.get(plate), plate_count)
-        if i == len(plates_used) - 1:
+        if i == len(plates_used) - 1 and len(plates_used) != 1:
             readable_weight += "and "
         readable_weight += f"{plate_count if plate_count > 1 else 'a'} {plate_str}, "
 
