@@ -47,6 +47,11 @@ class Commands(commands.Cog, name="commands"):
 
     @commands.command(name="plates", pass_context=True)
     async def plates(self, ctx):
+        """
+        Given a weight, return the human readable english form of that to load onto a barbell
+        :param ctx:
+        :return:
+        """
         args = ctx.message.content.split()
         if len(args) < 2:
             await ctx.send("Please provide all necessary arguments: !plates <weight>")

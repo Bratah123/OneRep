@@ -3,6 +3,13 @@ from typing import List
 # All weights are in lbs
 
 WEIGHT_PLATES = [45, 35, 25, 10, 5]  # We are skipping 2.5 lbs and 55 lbs plates as they are scarce
+WEIGHT_PLATES_TO_STR = {
+    45: "plate",
+    35: "35",
+    25: "25",
+    10: "10",
+    5: "5",
+}
 BAR_WEIGHT = 45
 
 
@@ -32,7 +39,7 @@ def weight_to_plates(weight) -> str:
     :param weight: int
     :return: str
     """
-    if weight == 45:
+    if 45 <= weight < 54:
         return "Just the barbell."
 
     total_weight = BAR_WEIGHT
@@ -47,9 +54,25 @@ def weight_to_plates(weight) -> str:
             plate_cache.append(plate)
             if total_weight == weight:
                 break
-            if total_weight < weight:
-                print(f"total weight: f{total_weight} vs. weight: {weight}")
-                continue
+            if weight - total_weight < 10:
+                break
 
     # convert our plate_cache into readable text
-    return ""
+    plates_used = list(set(plate_cache))
+    plates_used.sort(reverse=True)
+    readable_weight = ""
+
+    for i, plate in enumerate(plates_used):
+        plate_count = int(plate_cache.count(plate) / 2)
+        plate_str = plural(WEIGHT_PLATES_TO_STR.get(plate), plate_count)
+        if i == len(plates_used) - 1:
+            readable_weight += "and "
+        readable_weight += f"{plate_count if plate_count > 1 else 'a'} {plate_str}, "
+
+    return readable_weight + f"total weight of barbell: {total_weight} lbs"
+
+
+def plural(text, num) -> str:
+    if num <= 1:
+        return text
+    return text + "s"
