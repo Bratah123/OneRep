@@ -1,17 +1,20 @@
-import discord
 from discord.ext import commands
 
 token = ""
 
-with open("token.txt") as f:
-    lines = f.read()
-    token += lines.split('\n', 1)[0]
+try:
+    with open("token.txt") as f:  # Reading the first line of token.txt in this directory
+        lines = f.read()
+        token += lines.split('\n', 1)[0]
+except Exception as e:
+    print("Error trying to open token.txt, consider making a token.txt file?", e)
 
 bot = commands.Bot(command_prefix='!')
 
 print("Loading all commands via cogs...")
 
-# bot.load_extension("commands")
+
+bot.load_extension("commands")
 
 
 @bot.event
