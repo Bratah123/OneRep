@@ -36,7 +36,7 @@ class Commands(commands.Cog, name="commands"):
         index = 0
         for i in range(10, 105, 5):
             # looping through 10-100% incrementing by 5% each iteration
-            if weight_percentages[index] < 45.0:  # This way we dont show a weight where its lighter than the bar
+            if weight_percentages[index] < 45.0:  # This way we don't show a weight where its lighter than the bar
                 index += 1
                 continue
             message += f"\n{i}%: {weight_percentages[index]} -> {weight_to_plates(weight_percentages[index])}"

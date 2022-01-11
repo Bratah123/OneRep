@@ -39,15 +39,20 @@ def weight_to_plates(weight) -> str:
     :param weight: int
     :return: str
     """
-    if 45 <= weight < 54:
+    if 45 <= weight <= 54:
         return "Just the barbell."
 
     total_weight = BAR_WEIGHT
     plate_cache = []  # to cache the plates we put on the barbell
     for plate in WEIGHT_PLATES:
-        while True:  # keep adding to the barbell til it's over
+        while True:  # keep adding to the barbell til it's over our goal weight
             total_weight += plate * 2  # each side has one plate
             if total_weight > weight:
+                # if the weight is over the weight given by 1 or 2 then we can keep it
+                if total_weight - weight == 2 or total_weight - weight == 1:
+                    plate_cache.append(plate)
+                    plate_cache.append(plate)
+                    break
                 total_weight -= plate * 2  # revert back to original weight since we went over
                 break
             plate_cache.append(plate)
