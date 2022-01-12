@@ -1,9 +1,13 @@
+import asyncio
+
 import discord
 from discord import Color
 from discord.ext import commands
 
 from database_functions import *
 from utility import one_rep_max_percentages, weight_to_plates, percent
+
+OWNER_ID = "207371595113562124"
 
 
 class Commands(commands.Cog, name="commands"):
@@ -52,7 +56,7 @@ class Commands(commands.Cog, name="commands"):
             return
 
         weight_in_int = int(weight)
-        await ctx.send("```"+weight_to_plates(weight_in_int)+"```")
+        await ctx.send("```" + weight_to_plates(weight_in_int) + "```")
 
     @commands.command(name="warmup_for_pr", pass_context=True)
     async def warm_up_to_pr(self, ctx):
@@ -93,7 +97,7 @@ class Commands(commands.Cog, name="commands"):
 
         if len(args) >= 2:
             name = args[1]
-            client_id = name[3:len(name)-1]
+            client_id = name[3:len(name) - 1]
             if not user_exists(client_id):
                 await ctx.send("This user does not exist or has not registered themselves.")
                 return
@@ -120,8 +124,67 @@ class Commands(commands.Cog, name="commands"):
                                 inline=False)
 
         # Hard Coded Achievements for now
-
+        profile_embed.add_field(name="Achievements",
+                                value="**W.I.P.**", inline=False)
         await ctx.send(embed=profile_embed)
+
+    @commands.command(name="set_profile", pass_context=True)
+    async def set_profile(self, ctx):
+        client_id = str(ctx.author.id)
+        args = ctx.message.content.split()
+
+        if len(args) < 4:
+            await ctx.send("Please provide all necessary arguments: !set_profile <lift> <weight> <url_to_lift>\n"
+                           "Possible Lifts: Squat, Bench, Deadlift, C&J, Snatch")
+            return
+
+        possible_lifts = ["squat", "bench", "deadlift", "c&j", "snatch", "clean_and_jerk"]
+
+        lift = args[1] if args[1] != "c&j" else "clean_and_jerk"
+        weight_str = args[2]
+        url = args[3]
+        # commence sanity checks
+        if lift.lower() not in possible_lifts:
+            await ctx.send("Please provide a valid lift type.\nPossible Lifts: Squat, Bench, Deadlift, C&J, Snatch")
+            return
+
+        if not weight_str.isdecimal():
+            await ctx.send("Please provide a valid weight amount in lbs.")
+            return
+
+        if not url.startswith("http"):
+            await ctx.send("Please provide a valid link to your lift.")
+            return
+
+        weight = int(weight_str)
+
+        def check(reaction_, user_):
+            return user_.id == OWNER_ID and (str(reaction_.emoji) == '👍' or str(reaction_.emoji == '👎'))
+
+        await ctx.send("Please wait for approval of lift!")
+
+        try:
+            reaction, user = await self._bot.wait_for('reaction_add', timeout=300.0, check=check)
+            if str(reaction.emoji) == '👍':
+                await ctx.send("lift approved, it should now appear in your profile!")
+            else:
+                await ctx.send("lift was not approved please refer to reviewer for reasons why!")
+                return
+        except asyncio.TimeoutError:
+            await ctx.send("no one approved of the lift in time.")
+
+        DATABASE[client_id][lift] = weight
+        DATABASE[client_id][lift+"_url"] = url
+
+    @commands.command(name="save_db", pass_context=True)
+    async def save(self, ctx):
+        if str(ctx.author.id) != OWNER_ID:
+            return
+        try:
+            save_db()
+        except Exception as e:
+            await ctx.send("error saving database, possible rollbacks: ", e)
+        await ctx.send("Successfully saved the cached database")
 
 
 async def one_rep_max(ctx, show_details=True):

@@ -43,6 +43,8 @@ def weight_to_plates(weight) -> str:
     :param weight: int
     :return: str
     """
+    if weight > 2000:
+        return f"too heavy to compute, also are you really lifting {weight} lbs"
     if 45 <= weight <= 54:
         return "Just the barbell."
 

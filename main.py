@@ -1,5 +1,4 @@
 from discord.ext import commands
-
 token = ""
 
 try:
@@ -12,7 +11,6 @@ except Exception as e:
 bot = commands.Bot(command_prefix='!')
 
 print("Loading all commands via cogs...")
-
 
 bot.load_extension("commands")
 
