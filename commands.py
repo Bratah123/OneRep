@@ -97,12 +97,17 @@ class Commands(commands.Cog, name="commands"):
 
         if len(args) >= 2:
             name = args[1]
-            client_id = name[3:len(name) - 1]
+            client_id_new = ""
+            for c in name:
+                if c.isdecimal():
+                    client_id_new += c
+            client_id = client_id_new
             if not user_exists(client_id):
                 await ctx.send("This user does not exist or has not registered themselves.")
                 return
 
         if not user_exists(client_id):
+            print(f"User {client_id} is now being created...")
             create_new_profile(client_id)
 
         sbd_total = get_squat(client_id) + get_bench(client_id) + get_deadlift(client_id)
@@ -159,22 +164,22 @@ class Commands(commands.Cog, name="commands"):
         weight = int(weight_str)
 
         def check(reaction_, user_):
-            return user_.id == OWNER_ID and (str(reaction_.emoji) == '👍' or str(reaction_.emoji == '👎'))
+            return str(user_.id) == OWNER_ID and (str(reaction_.emoji) == '👍' or str(reaction_.emoji) == '👎')
 
         await ctx.send("Please wait for approval of lift!")
 
         try:
-            reaction, user = await self._bot.wait_for('reaction_add', timeout=300.0, check=check)
+            reaction, user = await self._bot.wait_for('reaction_add', timeout=180.0, check=check)
             if str(reaction.emoji) == '👍':
                 await ctx.send("lift approved, it should now appear in your profile!")
             else:
-                await ctx.send("lift was not approved please refer to reviewer for reasons why!")
+                await ctx.send("lift not approved, ask reviewer for reasons why")
                 return
         except asyncio.TimeoutError:
             await ctx.send("no one approved of the lift in time.")
 
-        DATABASE[client_id][lift] = weight
-        DATABASE[client_id][lift+"_url"] = url
+        DATABASE[client_id][lift.lower()] = weight
+        DATABASE[client_id][lift.lower()+"_url"] = url
 
     @commands.command(name="save_db", pass_context=True)
     async def save(self, ctx):
