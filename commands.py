@@ -136,6 +136,11 @@ class Commands(commands.Cog, name="commands"):
     @commands.command(name="set_profile", pass_context=True)
     async def set_profile(self, ctx):
         client_id = str(ctx.author.id)
+
+        if not user_exists(client_id):
+            await ctx.send("your profile is not set up yet, please do !profile.")
+            return
+
         args = ctx.message.content.split()
 
         if len(args) < 4:
