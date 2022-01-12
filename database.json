@@ -1,0 +1,18 @@
+{
+  "207371595113562124": {
+    "squat": 225,
+    "squat_url": "https://www.youtube.com/watch?v=ZGBLDaGfhmg&feature=youtu.be&ab_channel=BrandonNguyen",
+
+    "bench": 125,
+    "bench_press": "https://www.youtube.com/watch?v=VbuWPY816s4&ab_channel=BrandonNguyen",
+
+    "deadlift": 275,
+    "deadlift_url": "https://www.youtube.com/watch?v=asgJ9Tjeoag&ab_channel=BrandonNguyen",
+
+    "clean_and_jerk": 115,
+    "clean_and_jerk_url": "https://www.youtube.com/watch?v=x5raByrMj28&ab_channel=BrandonNguyen",
+
+    "snatch": 95,
+    "snatch_url": "https://www.youtube.com/watch?v=zOMQyWcQHWA&ab_channel=BrandonNguyen"
+  }
+}
