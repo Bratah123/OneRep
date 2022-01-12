@@ -1,5 +1,8 @@
+import discord
+from discord import Color
 from discord.ext import commands
 
+from database_functions import *
 from utility import one_rep_max_percentages, weight_to_plates, percent
 
 
@@ -84,7 +87,23 @@ class Commands(commands.Cog, name="commands"):
 
     @commands.command(name="profile", pass_context=True)
     async def profile(self, ctx):
-        pass
+        client_id = ctx.author.id
+        if not user_exists(client_id):
+            create_new_profile(client_id)
+
+        profile_embed = discord.Embed(title=ctx.author.name + "'s Profile", colour=Color.teal())
+        profile_embed.add_field(name="Powerlifting",
+                                value=f"[Squat]({get_squat_url(client_id)}): {get_squat(client_id)}"
+                                      f"\n[Bench Press]({get_bench_url(client_id)}): {get_bench(client_id)}"
+                                      f"\n[Deadlift]({get_deadlift_url(client_id)}): {get_deadlift(client_id)}",
+                                inline=False)
+
+        profile_embed.add_field(name="Weightlifting",
+                                value=f"[Clean and Jerk]({get_clean_and_jerk_url(client_id)}): {get_clean_and_jerk(client_id)}"
+                                      f"\n[Snatch]({get_snatch_url(client_id)}): {get_snatch(client_id)}",
+                                inline=False)
+
+        await ctx.send(embed=profile_embed)
 
 
 async def one_rep_max(ctx, show_details=True):

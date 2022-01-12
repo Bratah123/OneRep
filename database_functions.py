@@ -52,10 +52,50 @@ def create_new_profile(client_id):
     }
 
 
+def get_squat(client_id):
+    return DATABASE[client_id]["squat"]
+
+
+def get_squat_url(client_id):
+    return DATABASE[client_id]["squat_url"]
+
+
+def get_bench(client_id):
+    return DATABASE[client_id]["bench"]
+
+
+def get_bench_url(client_id):
+    return DATABASE[client_id]["bench_url"]
+
+
+def get_deadlift(client_id):
+    return DATABASE[client_id]["deadlift"]
+
+
+def get_deadlift_url(client_id):
+    return DATABASE[client_id]["deadlift_url"]
+
+
+def get_clean_and_jerk(client_id):
+    return DATABASE[client_id]["clean_and_jerk"]
+
+
+def get_clean_and_jerk_url(client_id):
+    return DATABASE[client_id]["clean_and_jerk_url"]
+
+
+def get_snatch(client_id):
+    return DATABASE[client_id]["snatch"]
+
+
+def get_snatch_url(client_id):
+    return DATABASE[client_id]["snatch_url"]
+
+
 def user_exists(client_id):
     return DATABASE.get(client_id) is not None
 
 
 def save_db():
-    with open('database.json', 'w') as f:
-        json.dump(DATABASE, f, indent=4)
+    with open('database.json', 'w') as db:
+        json.dump(DATABASE, db, indent=4)
