@@ -28,9 +28,13 @@ def one_rep_max_percentages(weight) -> List[int]:
     ret_list = []
     for i in range(10, 105, 5):
         # starting at 10% and then incrementing by 5 all til 100%
-        ret_list.append((weight * (i / 100)) // 1)  # some jank math, but // 1 to remove decimal number
+        ret_list.append(percent(weight, i))  # some jank math, but // 1 to remove decimal number
 
     return ret_list
+
+
+def percent(weight, percentage):
+    return (weight * (percentage / 100)) // 1
 
 
 def weight_to_plates(weight) -> str:
