@@ -87,21 +87,39 @@ class Commands(commands.Cog, name="commands"):
 
     @commands.command(name="profile", pass_context=True)
     async def profile(self, ctx):
-        client_id = ctx.author.id
+        args = ctx.message.content.split()
+        client_id = str(ctx.author.id)
+        name = ctx.author.name
+
+        if len(args) >= 2:
+            name = args[1]
+            client_id = name[3:len(name)-1]
+            if not user_exists(client_id):
+                await ctx.send("This user does not exist or has not registered themselves.")
+                return
+
         if not user_exists(client_id):
             create_new_profile(client_id)
 
-        profile_embed = discord.Embed(title=ctx.author.name + "'s Profile", colour=Color.teal())
+        sbd_total = get_squat(client_id) + get_bench(client_id) + get_deadlift(client_id)
+
+        profile_embed = discord.Embed(title=name + "'s Profile",
+                                      colour=Color.teal(),
+                                      description=f"SBD Total: {sbd_total}lbs"
+                                      )
         profile_embed.add_field(name="Powerlifting",
-                                value=f"[Squat]({get_squat_url(client_id)}): {get_squat(client_id)}"
-                                      f"\n[Bench Press]({get_bench_url(client_id)}): {get_bench(client_id)}"
-                                      f"\n[Deadlift]({get_deadlift_url(client_id)}): {get_deadlift(client_id)}",
+                                value=f"[Squat]({get_squat_url(client_id)}): {get_squat(client_id)}lbs"
+                                      f"\n[Bench Press]({get_bench_url(client_id)}): {get_bench(client_id)}lbs"
+                                      f"\n[Deadlift]({get_deadlift_url(client_id)}): {get_deadlift(client_id)}lbs",
                                 inline=False)
 
         profile_embed.add_field(name="Weightlifting",
-                                value=f"[Clean and Jerk]({get_clean_and_jerk_url(client_id)}): {get_clean_and_jerk(client_id)}"
-                                      f"\n[Snatch]({get_snatch_url(client_id)}): {get_snatch(client_id)}",
+                                value=f"[Clean and Jerk]({get_clean_and_jerk_url(client_id)}): "
+                                      f"{get_clean_and_jerk(client_id)}lbs"
+                                      f"\n[Snatch]({get_snatch_url(client_id)}): {get_snatch(client_id)}lbs",
                                 inline=False)
+
+        # Hard Coded Achievements for now
 
         await ctx.send(embed=profile_embed)
 

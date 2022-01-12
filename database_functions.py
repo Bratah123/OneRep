@@ -35,7 +35,7 @@ def create_new_profile(client_id):
     DATABASE[client_id] = {
         # Powerlifting section
         "squat": 0,
-        "squat_url": "video of squat here",
+        "squat_url": "",
 
         "bench": 0,
         "bench_url": "",
