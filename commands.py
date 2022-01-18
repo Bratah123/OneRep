@@ -153,8 +153,6 @@ class Commands(commands.Cog, name="commands"):
         lift = args[1]
         weight_str = args[2]
         url = args[3]
-        if lift == "c&j":
-            lift = "clean_and_jerk"
         # commence sanity checks
         if lift.lower() not in possible_lifts:
             await ctx.send("Please provide a valid lift type.\nPossible Lifts: Squat, Bench, Deadlift, C&J, Snatch")

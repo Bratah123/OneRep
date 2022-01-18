@@ -17,8 +17,8 @@ database structure:
         "deadlift_url": "video of deadlift here",
 
         # Weightlifting section
-        "clean_and_jerk": int_value_here,
-        "clean_and_jerk_url": "video of C&J here",
+        "c&j": int_value_here,
+        "c&j_url": "video of C&J here",
 
         "snatch": int_value_here,
         "snatch_url": "snatch url"
@@ -77,11 +77,11 @@ def get_deadlift_url(client_id):
 
 
 def get_clean_and_jerk(client_id):
-    return DATABASE[client_id]["clean_and_jerk"]
+    return DATABASE[client_id]["c&j"]
 
 
 def get_clean_and_jerk_url(client_id):
-    return DATABASE[client_id]["clean_and_jerk_url"]
+    return DATABASE[client_id]["c&j_url"]
 
 
 def get_snatch(client_id):
