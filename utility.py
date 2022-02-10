@@ -80,7 +80,7 @@ def weight_to_plates(weight) -> str:
             readable_weight += "and "
         readable_weight += f"{plate_count if plate_count > 1 else 'a'} {plate_str}, "
 
-    return readable_weight + f"total weight of barbell: {total_weight} lbs"
+    return readable_weight + f"barbell weight: {total_weight} lbs"
 
 
 def plural(text, num) -> str:

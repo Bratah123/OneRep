@@ -89,6 +89,103 @@ class Commands(commands.Cog, name="commands"):
         message += "\n%105+ PR rep```"
         await ctx.send(message)
 
+    @commands.command(name="classic", aliases=['c'], pass_context=True)
+    async def classic(self, ctx):
+        args = ctx.message.content.split()
+        if len(args) < 2:
+            await ctx.send("Classic command provides the weights needed for the 8-6-4-2-2 set & "
+                           "rep ranges given a one rep max.\n"
+                           "Please provide all necessary arguments: !classic <weight>")
+            return
+
+        weight = args[1]
+
+        if not weight.isdecimal():
+            await ctx.send("Please provide a valid weight number in lbs.")
+            return
+
+        weight_in_int = int(weight)
+        percentages_to_reps = {
+            70: 8,
+            85: 6,
+            90: 4,
+            95: 2,
+        }
+        message = f"```\nClassic 8-6-4-2-2 Program for Squat/Bench/Deadlift\nWeight: {weight_in_int}\n"
+
+        for i, percentage in enumerate(percentages_to_reps):
+            message += f"\nSet {i + 1}) {percentage}%: {percent(weight_in_int, percentage)} for {percentages_to_reps[percentage]} " \
+                       f"reps -> {weight_to_plates(percent(weight_in_int, percentage))}"
+
+        message += '\nSet 5) 95%: for 2 reps```'
+        await ctx.send(message)
+
+    @commands.command(name="smolov", aliases=['s'], pass_context=True)
+    async def smolov(self, ctx):
+        """
+        Produces a peaking program that allows you to explode in squat or bench press after the program
+        Search up Smolov Jr. program to find rep ranges, sets, and percentages
+        """
+        args = ctx.message.content.split()
+        if len(args) < 2:
+            await ctx.send("Smolov command will produce a 3 week peaking program that aims to "
+                           "explode your squat or bench press after completion of the program given a one rep max.\n"
+                           "Please provide all necessary arguments: !classic <weight>")
+            return
+
+        weight = args[1]
+
+        if not weight.isdecimal():
+            await ctx.send("Please provide a valid weight number in lbs.")
+            return
+
+        weight_in_int = int(weight)
+        sets_to_reps = {  # This applicable to any week
+            6: 6,
+            7: 5,
+            8: 4,
+            10: 3,
+        }
+        percentages = [
+            70,  # Day One
+            75,  # Day Two
+            80,  # Day Three
+            85,  # Day Four
+        ]
+        days_of_week = [  # Days that the program recommends training on
+            "Monday",
+            "Wednesday",
+            "Friday",
+            "Saturday",
+        ]
+        increment_week_2 = 5  # this can range from 5-10 depending on the user
+        increment_week_3 = 10  # this can range from 10-20 depending on the user
+        message = f"```\nSmolov Jr. Program for Squat/Bench\nWeight: {weight_in_int}\n```"
+
+        # Week 1
+        message += "__Week 1__\n```"
+        for i, sets in enumerate(sets_to_reps):
+            message += f"\n{days_of_week[i]}: {sets}x{sets_to_reps[sets]} @ {percentages[i]}% -> " \
+                       f"{percent(weight_in_int, percentages[i])}"
+        message += '```'
+
+        # Week 2
+        message += "__Week 2__\n```"
+        for i, sets in enumerate(sets_to_reps):
+            message += f"\n{days_of_week[i]}: {sets}x{sets_to_reps[sets]} @ {percentages[i]}% + {increment_week_2} " \
+                       f"-> " \
+                       f"{percent(weight_in_int, percentages[i]) + increment_week_2}"
+
+        message += '```'
+        # Week 3
+        message += "__Week 3__\n```"
+        for i, sets in enumerate(sets_to_reps):
+            message += f"\n{days_of_week[i]}: {sets}x{sets_to_reps[sets]} @ {percentages[i]}% + {increment_week_3} " \
+                       f"-> " \
+                       f"{percent(weight_in_int, percentages[i]) + increment_week_3}"
+        message += '```'
+        await ctx.send(message)
+
     @commands.command(name="profile", pass_context=True)
     async def profile(self, ctx):
         args = ctx.message.content.split()
@@ -184,7 +281,7 @@ class Commands(commands.Cog, name="commands"):
             await ctx.send("no one approved of the lift in time.")
 
         DATABASE[client_id][lift.lower()] = weight
-        DATABASE[client_id][lift.lower()+"_url"] = url
+        DATABASE[client_id][lift.lower() + "_url"] = url
 
     @commands.command(name="save_db", pass_context=True)
     async def save(self, ctx):
@@ -206,6 +303,7 @@ async def one_rep_max(ctx, show_details=True):
     :return:
     """
     args = ctx.message.content.split()
+
     if len(args) < 2:
         await ctx.send("Please provide all necessary arguments: !1rm <weight>")
         return
